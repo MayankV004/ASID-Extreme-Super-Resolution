@@ -90,7 +90,7 @@ Low-Resolution (H x W) ──► [x2 Pre-Upsampling] ──► Intermediate (2H 
 
 ---
 
-## 🚀 Quick Start & Reproducibility
+## 🚀 Quick Start & Reproducibility Guide
 
 ### 1. Setup Environment
 ```bash
@@ -102,38 +102,86 @@ cd ASID-Extreme-Super-Resolution
 python3 -m venv venv
 source venv/bin/activate
 
-# Install dependencies
+# Install PyTorch with CUDA 12.1 support
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
-pip install thop tensorboardX einops timm opencv-python pyyaml tqdm matplotlib
+
+# Install project dependencies
+pip install -r requirements.txt
 ```
 
-### 2. Generate x8 Benchmarks
+### 2. Configure Environment Paths
+Verify that `env/env.json` points to your active workspace path:
+```json
+{
+    "work_dir": "/path/to/ASID-Extreme-Super-Resolution",
+    "dataset_dir": "/path/to/ASID-Extreme-Super-Resolution/dataset",
+    "train_dir": "/path/to/ASID-Extreme-Super-Resolution/train_logs"
+}
+```
+
+### 3. Generate Extreme $\times 8$ Benchmarks
 ```bash
 python data_tools/generate_x8_benchmarks.py
 ```
+*(Prepares modcrop-8 HR targets and bicubic downscaled LR pairs for Set5, Set14, and Urban100).*
 
-### 3. Evaluate the Trained Model
+### 4. Evaluate Trained Pre-Upsampled Model
 ```bash
-# Run evaluation on Set5 using our trained checkpoint
-python test.py -v "ASID_PreUpsample_X8_DIV2K" -s 1 --test_dataset_name Set5
-
-# Run comparative metric script
+# Run multi-benchmark comparative evaluation (Bicubic vs. Zero-Shot vs. Ours)
 python evaluate_preupsample_x8.py --datasets Set5 Set14 Urban100
+
+# Or run Set5 evaluation via the native engine
+python test.py -v "ASID_PreUpsample_X8_DIV2K" -s 1 --test_dataset_name Set5
 ```
 
-### 4. Cloud Training via Google Colab
-Upload [ASID_Extreme_Super_Resolution.ipynb](file:///home/streamliner/computer-vision-project/ASID_Extreme_Super_Resolution.ipynb) to Google Colab and run all cells with a free T4 GPU.
+### 5. Local Sanity Training (RTX 3050 Laptop GPU / 2 Minutes)
+```bash
+python data_tools/setup_mini_div2k.py
+python train.py -opt train_yamls/train_ASID_mini_test.yaml
+```
+
+### 6. Cloud Training via Google Colab (Tesla T4 GPU)
+Open [`ASID_Extreme_Super_Resolution.ipynb`](file:///home/streamliner/computer-vision-project/ASID_Extreme_Super_Resolution.ipynb) in Google Colab, set runtime to **T4 GPU**, and execute all cells to train on the complete 800-image DIV2K dataset ($51,200$ patches per epoch).
 
 ---
 
 ## 📚 Complete Project Documentation
-* 📄 **[Course Project Manual](cv-project%20docs/COURSE_PROJECT_MANUAL.md):** Theoretical derivations, hyperparameter engineering, and viva presentation defense guide.
-* 📄 **[Final Project Report](cv-project%20docs/FINAL_PROJECT_REPORT.md):** Full academic report matching course proposal specifications.
-* 📄 **[Original Course Proposal](cv-project%20docs/CV_project.pdf):** Initial proposal scoping extreme SISR research gaps.
+* 📄 **[Course Project Manual](cv-project%20docs/COURSE_PROJECT_MANUAL.md):** Architectural diagrams, hyperparameter engineering, viva presentation Q&A defense guide, and setup manual.
+* 📄 **[Final Project Report](cv-project%20docs/FINAL_PROJECT_REPORT.md):** Academic report detailing quantitative metrics, zero-shot failure mechanics, and ablation analysis.
+* 📄 **[Original Course Proposal](cv-project%20docs/CV_project.pdf):** Initial course proposal scoping extreme SISR research gaps.
 
 ---
 
-## Citation
+## 🙏 Credits & Literature Attribution
+
+This project is built upon the breakthrough research, network design, and official implementation of:
+
+### Primary Paper
+* **Paper Title:** *Efficient Attention-Sharing Information Distillation Transformer for Lightweight Single Image Super-Resolution*
+* **Authors:** Karam Park, Jae Woong Soh, and Nam Ik Cho
+* **Affiliation:** Department of Electrical and Computer Engineering, INMC, Seoul National University, Seoul, Korea
+* **Venue:** Accepted for presentation at the **AAAI Conference on Artificial Intelligence (AAAI 2025)**
+
+### Foundational Frameworks & Acknowledgments
+* **Omni-SR Base Framework:** Built upon the open-source code and training foundations of *Omni-SR: Omni Aggregation Networks for Lightweight Image Super-Resolution* (CVPR 2023) by Richard Wang et al.
+* **DIV2K Benchmark:** High-resolution dataset provided by the Computer Vision Lab, ETH Zurich (*NTIRE 2017 Challenge on Single Image Super-Resolution* by Timofte et al.).
+* **Standard Test Sets:** Set5 (Bevilacqua et al.), Set14 (Zeyde et al.), Urban100 (Huang et al.), and B100 (Martin et al.).
+
+### 🔗 Official External Links
+
+| Resource | Description | Link |
+| :--- | :--- | :--- |
+| **ASID Paper (arXiv)** | Official AAAI 2025 Paper Page | [arXiv:2501.15774](https://arxiv.org/abs/2501.15774) |
+| **ASID Paper (PDF)** | Full Text & Supplementary PDF | [arXiv PDF](https://arxiv.org/pdf/2501.15774) |
+| **ASID GitHub** | Official PyTorch Code Repository by SNU | [saturnian77/ASID](https://github.com/saturnian77/ASID) |
+| **Omni-SR GitHub** | Foundational Base Framework | [Francis0625/Omni-SR](https://github.com/Francis0625/Omni-SR/) |
+| **DIV2K Dataset** | ETH Zurich CVL Dataset Portal | [DIV2K Official Page](https://data.vision.ee.ethz.ch/cvl/DIV2K/) |
+| **Course Project Repo** | Extreme x8 Extension & Pre-Upsampling Optimization | [MayankV004/ASID-Extreme-Super-Resolution](https://github.com/MayankV004/ASID-Extreme-Super-Resolution) |
+
+---
+
+## 📜 Citations
+
 ```bibtex
 @inproceedings{park2025efficient,
   title={Efficient Attention-Sharing Information Distillation Transformer for Lightweight Single Image Super-Resolution},
@@ -141,4 +189,21 @@ Upload [ASID_Extreme_Super_Resolution.ipynb](file:///home/streamliner/computer-v
   booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
   year={2025}
 }
+
+@inproceedings{wang2023omni,
+  title={Omni Aggregation Networks for Lightweight Image Super-Resolution},
+  author={Wang, Richard and Dong, Zheng and Gao, Chang and Zhang, Meng and Wang, Zhiyong},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages={22378--22387},
+  year={2023}
+}
+
+@inproceedings{timofte2017ntire,
+  title={NTIRE 2017 Challenge on Single Image Super-Resolution: Methods and Results},
+  author={Timofte, Radu and Agustsson, Eirikur and Van Gool, Luc and Yang, Ming-Hsuan and Zhang, Lei and others},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)},
+  pages={114--125},
+  year={2017}
+}
 ```
+

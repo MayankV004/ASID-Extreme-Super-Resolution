@@ -16,6 +16,8 @@
 5. [Two-Tier GPU Training & Resource Optimization](#5-two-tier-gpu-training--resource-optimization)
 6. [Qualitative Analysis & Artifact Suppression](#6-qualitative-analysis--artifact-suppression)
 7. [Viva / Presentation Q&A Defense Guide](#7-viva--presentation-qa-defense-guide)
+8. [Credits, Original Paper Attribution & Official Links](#8-credits-original-paper-attribution--official-links)
+9. [Complete Environment Setup & Reproduction Guide](#9-complete-environment-setup--reproduction-guide)
 
 ---
 
@@ -250,3 +252,268 @@ Visual figures generated in `SR_Results/visual_comparisons/`:
 
 ### Q3: Why not just use a larger upsampler head in Direct $\times 8$?
 **Answer:** A direct $8\times$ PixelShuffle head requires $C \times 8^2 = 192$ channels, increasing parameter count from 313K to 375K (+20%). More importantly, it leaves the attention backbone operating on tiny $32 \times 32$ tokens where the receptive field is severely restricted. Our pre-upsampling method doubles the spatial token context while maintaining **zero parameter overhead**.
+
+---
+
+## 8. Credits, Original Paper Attribution & Official Links
+
+### 8.1 Primary Literature Attribution
+
+This project is built upon the foundational research, architecture, and official codebase of the following paper accepted at **AAAI 2025**:
+
+> **Title:** *Efficient Attention-Sharing Information Distillation Transformer for Lightweight Single Image Super-Resolution*  
+> **Authors:** Karam Park, Jae Woong Soh, and Nam Ik Cho  
+> **Affiliation:** Department of Electrical and Computer Engineering, INMC, Seoul National University, Seoul, Korea  
+> **Conference:** Proceedings of the AAAI Conference on Artificial Intelligence (AAAI 2025)  
+> **arXiv Identifier:** [arXiv:2501.15774 [cs.CV]](https://arxiv.org/abs/2501.15774)  
+> **Official Codebase:** [github.com/saturnian77/ASID](https://github.com/saturnian77/ASID)  
+
+#### Summary of the Original ASID Contribution
+Standard Vision Transformers for SISR (such as SwinIR, HAT, and Restormer) achieve exceptional reconstruction fidelity but suffer from prohibitive computational footprint (typically 12M to 20M parameters and hundreds of GFLOPs). The authors of ASID introduced two synergistic innovations:
+1. **Information Distillation Scheme for Transformers:** Progressively splitting feature channels into retained and transformed paths, preventing redundant feature accumulation across stacked layers.
+2. **Cross-Block Attention-Sharing:** Generating high-quality self-attention query-key maps in an initial block ($\text{IDSG}_A$) and sharing these affinity matrices ($A_1, \dots, A_6$) across subsequent distillation blocks ($\text{IDSG}_1, \text{IDSG}_2$), drastically pruning the self-attention compute while maintaining expressive representation with only **~313K parameters**.
+
+Our project investigated the scalability of this elegant architecture to **extreme downsampling ($\times 8$)**, introducing the pre-upsampling token expansion technique to overcome receptive-field starvation.
+
+---
+
+### 8.2 Foundational Frameworks & Datasets
+
+We gratefully acknowledge the following underlying open-source projects, benchmarks, and frameworks:
+
+1. **Omni-SR Framework:**
+   * *Omni Aggregation Networks for Lightweight Image Super-Resolution* (CVPR 2023) by Richard Wang, Zheng Dong, et al.
+   * [GitHub: Francis0625/Omni-SR](https://github.com/Francis0625/Omni-SR/)
+   * ASID’s modular trainer, dataset prefetchers, and test scripts are established on the high-performance Omni-SR framework.
+
+2. **DIV2K Dataset (ETH Zurich):**
+   * *NTIRE 2017 Challenge on Single Image Super-Resolution: Methods and Results* by Radu Timofte, Eirikur Agustsson, et al. (CVPRW 2017).
+   * [DIV2K Official Portal](https://data.vision.ee.ethz.ch/cvl/DIV2K/)
+   * 800 high-diversity, 2K-resolution training images used for end-to-end network optimization.
+
+3. **Standard SISR Evaluation Benchmarks:**
+   * **Set5:** Bevilacqua et al., *"Low-Complexity Single-Image Super-Resolution based on Nonnegative Neighbor Embedding"*, BMVC 2012.
+   * **Set14:** Zeyde et al., *"On Single Image Scale-Up Using Sparse-Representations"*, Curves and Surfaces, LNCS 2010.
+   * **Urban100:** Huang et al., *"Single Image Super-Resolution From Transformed Self-Exemplars"*, CVPR 2015.
+   * **BSD100 (B100):** Martin et al., *"A Database of Human Segmented Natural Images and its Application to Evaluating Segmentation Algorithms"*, ICCV 2001.
+
+---
+
+### 8.3 Comprehensive External Links Directory
+
+| Resource | Description | Direct URL |
+| :--- | :--- | :--- |
+| **ASID Paper (arXiv)** | Official AAAI 2025 Paper Page | [https://arxiv.org/abs/2501.15774](https://arxiv.org/abs/2501.15774) |
+| **ASID Paper (PDF)** | Full Text PDF with Supplementary Material | [https://arxiv.org/pdf/2501.15774](https://arxiv.org/pdf/2501.15774) |
+| **ASID Upstream Repo** | Official PyTorch Implementation by SNU authors | [https://github.com/saturnian77/ASID](https://github.com/saturnian77/ASID) |
+| **Omni-SR Repo** | Foundational Base Framework Repository | [https://github.com/Francis0625/Omni-SR/](https://github.com/Francis0625/Omni-SR/) |
+| **DIV2K Dataset** | ETH Zurich CVL 2K Resolution Dataset | [https://data.vision.ee.ethz.ch/cvl/DIV2K/](https://data.vision.ee.ethz.ch/cvl/DIV2K/) |
+| **This Course Repository** | Extreme x8 Extension & Pre-Upsampling Optimization | [https://github.com/MayankV004/ASID-Extreme-Super-Resolution](https://github.com/MayankV004/ASID-Extreme-Super-Resolution) |
+
+---
+
+### 8.4 BibTeX Citations
+
+```bibtex
+@inproceedings{park2025efficient,
+  title={Efficient Attention-Sharing Information Distillation Transformer for Lightweight Single Image Super-Resolution},
+  author={Park, Karam and Soh, Jae Woong and Cho, Nam Ik},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  year={2025}
+}
+
+@inproceedings{wang2023omni,
+  title={Omni Aggregation Networks for Lightweight Image Super-Resolution},
+  author={Wang, Richard and Dong, Zheng and Gao, Chang and Zhang, Meng and Wang, Zhiyong},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages={22378--22387},
+  year={2023}
+}
+
+@inproceedings{timofte2017ntire,
+  title={NTIRE 2017 Challenge on Single Image Super-Resolution: Methods and Results},
+  author={Timofte, Radu and Agustsson, Eirikur and Van Gool, Luc and Yang, Ming-Hsuan and Zhang, Lei and others},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)},
+  pages={114--125},
+  year={2017}
+}
+```
+
+---
+
+## 9. Complete Environment Setup & Reproduction Guide
+
+This guide provides fully reproducible, step-by-step instructions for running benchmarks, evaluating checkpoints, and training models both on a local workstation and in cloud environments (Google Colab).
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                      PROJECT SETUP WORKFLOW OVERVIEW                     │
+├──────────────────────────────────────────────────────────────────────────┤
+│ 1. Clone & venv  ──► 2. Install Torch & Deps  ──► 3. Config env.json     │
+│ 4. Checkpoints   ──► 5. Gen x8 Benchmarks     ──► 6. Evaluate & Verify   │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 9.1 Hardware & Environment Prerequisites
+
+* **Operating System:** Linux (Ubuntu 20.04/22.04 LTS recommended) or Windows 10/11 (via WSL2 or Native PowerShell).
+* **Python:** Python 3.10.x (recommended: 3.10.9 - 3.10.13).
+* **CUDA Toolkit:** CUDA 11.8 or CUDA 12.1+ with corresponding NVIDIA display drivers.
+* **Hardware Specs:**
+  * *Local Inference / Evaluation:* Any NVIDIA GPU with $\ge 2\text{ GB}$ VRAM (or CPU).
+  * *Local Unit Testing / Mini-Training:* NVIDIA GPU with $\ge 4\text{ GB}$ VRAM (e.g., RTX 3050 Laptop).
+  * *Full DIV2K Training:* NVIDIA GPU with $\ge 12\text{ GB}$ VRAM (e.g., Google Colab Tesla T4, RTX 3060/4070+).
+
+---
+
+### 9.2 Local Workstation Setup (Step-by-Step)
+
+#### Step 1: Clone the Repository
+```bash
+git clone https://github.com/MayankV004/ASID-Extreme-Super-Resolution.git
+cd ASID-Extreme-Super-Resolution
+```
+
+#### Step 2: Create & Activate Virtual Environment
+```bash
+# Create a fresh isolated Python 3.10 environment
+python3 -m venv venv
+
+# Activate on Linux / macOS:
+source venv/bin/activate
+
+# Activate on Windows (PowerShell):
+# .\venv\Scripts\Activate.ps1
+```
+
+#### Step 3: Install PyTorch & Project Dependencies
+```bash
+# Upgrade pip and wheel
+pip install --upgrade pip setuptools wheel
+
+# Install PyTorch with CUDA 12.1 acceleration (adjust URL if using CUDA 11.8)
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+
+# Install core project dependencies
+pip install -r requirements.txt
+```
+
+Verify GPU visibility in Python:
+```bash
+python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()} | Device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"None\"}')"
+```
+
+#### Step 4: Configure Workspace Paths (`env/env.json`)
+Open `env/env.json` and ensure the directories match your absolute workspace layout:
+```json
+{
+    "work_dir": "/path/to/ASID-Extreme-Super-Resolution",
+    "dataset_dir": "/path/to/ASID-Extreme-Super-Resolution/dataset",
+    "train_dir": "/path/to/ASID-Extreme-Super-Resolution/train_logs"
+}
+```
+
+#### Step 5: Verify Model Checkpoints
+Ensure checkpoints are placed in the expected directory structure:
+```
+train_logs/
+├── ASID_X4_DIV2K/
+│   └── checkpoints/
+│       └── epoch0_ASID.pth                     # Pretrained x4 baseline backbone (1.5 MB)
+└── ASID_PreUpsample_X8_DIV2K/
+    └── checkpoints/
+        └── epoch1_ASID.pth                     # Our trained x8 Pre-Upsample model (1.5 MB)
+```
+*(Checkpoints are tracked directly via Git in this repository).*
+
+#### Step 6: Generate Extreme $\times 8$ Benchmarks
+Generate the modcrop-8 and bicubic downscaled evaluation pairs for `Set5`, `Set14`, and `Urban100`:
+```bash
+python data_tools/generate_x8_benchmarks.py
+```
+*Outputs generated in:* `dataset/benchmark/Set5/`, `dataset/benchmark/Set14/`, and `dataset/benchmark/Urban100/`.
+
+#### Step 7: Run Evaluation & Benchmark Metric Comparison
+Evaluate both the baseline, zero-shot, and our trained Pre-Upsample model across datasets:
+```bash
+# Run comprehensive metric comparison across benchmarks
+python evaluate_preupsample_x8.py --datasets Set5 Set14 Urban100
+
+# Or evaluate Set5 directly via the native test engine:
+python test.py -v "ASID_PreUpsample_X8_DIV2K" -s 1 --test_dataset_name Set5
+```
+
+Expected output on Set5:
+```
+======================================================================
+Benchmark Evaluation on Set5 (Scale x8)
+======================================================================
+Method                                  PSNR (Y)       SSIM (Y)
+----------------------------------------------------------------------
+Bicubic Baseline                        24.40 dB       0.6583
+Zero-Shot Pre-Upsample (Untrained)      23.77 dB       0.6436
+Ours: Trained Pre-Upsample x8           25.77 dB       0.7250
+----------------------------------------------------------------------
+Net Gain over Bicubic Baseline:         +1.37 dB       +0.0667
+======================================================================
+```
+
+#### Step 8: Run Local Sanity Training (Tier 1 Check)
+To test training pipelines, loss calculation, backward pass, and optimizer steps on your local machine:
+```bash
+# Sets up a 15-image mini DIV2K test set
+python data_tools/setup_mini_div2k.py
+
+# Runs 2 epochs of fast sanity training (~2 minutes on RTX 3050 Laptop GPU)
+python train.py -opt train_yamls/train_ASID_mini_test.yaml
+```
+
+---
+
+### 9.3 Cloud Training Walkthrough (Google Colab / Tesla T4)
+
+To train on the full 800-image DIV2K dataset using Google Colab’s free GPU:
+
+1. **Launch Colab:** Open [Google Colab](https://colab.research.google.com/) and create a new notebook or upload [`ASID_Extreme_Super_Resolution.ipynb`](file:///home/streamliner/computer-vision-project/ASID_Extreme_Super_Resolution.ipynb).
+2. **Select GPU Runtime:** Navigate to **Runtime > Change runtime type** and select **T4 GPU**.
+3. **Run Setup Cell:**
+   ```python
+   # Clone the project repository
+   !git clone https://github.com/MayankV004/ASID-Extreme-Super-Resolution.git
+   %cd ASID-Extreme-Super-Resolution
+
+   # Install dependencies
+   !pip install -r requirements.txt
+   ```
+4. **Download Full DIV2K Dataset:**
+   ```python
+   # Download DIV2K HR training images (approx. 3.5 GB)
+   !mkdir -p dataset/DIV2K
+   !wget http://data.vision.ee.ethz.ch/cvl/DIV2K/DIV2K_train_HR.zip -P dataset/DIV2K/
+   !unzip -q dataset/DIV2K/DIV2K_train_HR.zip -d dataset/DIV2K/
+   ```
+5. **Execute Full Training:**
+   ```python
+   # Run end-to-end Pre-Upsample training (51,200 patches per epoch)
+   !python train.py -opt train_yamls/train_ASID_PreUpsample_x8.yaml
+   ```
+6. **Save Checkpoint & Evaluate:**
+   ```python
+   # Evaluate generated epoch1 checkpoint
+   !python data_tools/generate_x8_benchmarks.py
+   !python evaluate_preupsample_x8.py --datasets Set5 Set14 Urban100
+   ```
+
+---
+
+### 9.4 Troubleshooting & Common Gotchas
+
+* **Issue 1: CUDA Out of Memory (OOM)**
+  * *Fix:* In the training YAML configuration (`train_yamls/train_ASID_PreUpsample_x8.yaml`), reduce `batch_size` from 16 to 8 or set `patch_size: 32`.
+* **Issue 2: Path Not Found during Training**
+  * *Fix:* Check `env/env.json`. The `work_dir` and `dataset_dir` must reflect the absolute path of your clone directory.
+* **Issue 3: PSNR/SSIM Calculation Differences**
+  * *Note:* Standard super-resolution benchmarks compute PSNR and SSIM **strictly on the luminance ($Y$) channel** of the YCbCr color space with a scale border crop (cropping $8\text{ pixels}$ around edges). Our evaluation scripts adhere strictly to this NTIRE / IEEE standard.
+

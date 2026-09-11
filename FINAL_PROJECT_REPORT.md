@@ -157,3 +157,93 @@ This project successfully tackled the unexplored domain of extreme ($\times 8$) 
 * We maintained an ultra-compact footprint of **313,104 parameters**.
 * We surpassed the standard bicubic baseline by **$+1.37\text{ dB}$ on Set5**, **$+0.97\text{ dB}$ on Set14**, and **$+0.92\text{ dB}$ on Urban100**.
 * We demonstrated that ultra-lightweight transformers can effectively restore extreme $8\times$ degradations without requiring multi-million parameter models.
+
+---
+
+## 8. Literature Attribution, Acknowledgments & Official Links
+
+### 8.1 Primary Literature Citation
+This project builds directly upon the architecture, insights, and code from the following **AAAI 2025** publication:
+
+* **Paper:** *Efficient Attention-Sharing Information Distillation Transformer for Lightweight Single Image Super-Resolution*
+* **Authors:** Karam Park, Jae Woong Soh, and Nam Ik Cho
+* **Affiliation:** Department of Electrical and Computer Engineering, INMC, Seoul National University, Seoul, Korea
+* **Conference:** Proceedings of the AAAI Conference on Artificial Intelligence (AAAI 2025)
+* **arXiv Link:** [https://arxiv.org/abs/2501.15774](https://arxiv.org/abs/2501.15774)
+* **PDF Link:** [https://arxiv.org/pdf/2501.15774](https://arxiv.org/pdf/2501.15774)
+* **Official GitHub Codebase:** [https://github.com/saturnian77/ASID](https://github.com/saturnian77/ASID)
+
+### 8.2 Foundational Frameworks & Datasets
+* **Omni-SR Base Framework:** Built on Omni-SR (*Omni Aggregation Networks for Lightweight Image Super-Resolution*, CVPR 2023) by Richard Wang, Zheng Dong, et al. [GitHub Repository](https://github.com/Francis0625/Omni-SR/).
+* **DIV2K Dataset:** NTIRE 2017 Challenge dataset by Agustsson and Timofte, ETH Zurich CVL. [DIV2K Portal](https://data.vision.ee.ethz.ch/cvl/DIV2K/).
+* **Benchmark Datasets:** Set5 (Bevilacqua et al., 2012), Set14 (Zeyde et al., 2010), Urban100 (Huang et al., 2015), B100 (Martin et al., 2001).
+
+### 8.3 External Links Directory
+| Resource | Description | URL |
+| :--- | :--- | :--- |
+| **Official Paper (arXiv)** | AAAI 2025 Paper Page | [https://arxiv.org/abs/2501.15774](https://arxiv.org/abs/2501.15774) |
+| **Official Codebase** | Original ASID Repository (PyTorch) | [https://github.com/saturnian77/ASID](https://github.com/saturnian77/ASID) |
+| **Omni-SR** | Base Modular Framework | [https://github.com/Francis0625/Omni-SR/](https://github.com/Francis0625/Omni-SR/) |
+| **DIV2K Dataset** | 2K High-Resolution Training Data | [https://data.vision.ee.ethz.ch/cvl/DIV2K/](https://data.vision.ee.ethz.ch/cvl/DIV2K/) |
+| **Project Repository** | Our Extreme x8 Extension & Pre-Upsampling Code | [https://github.com/MayankV004/ASID-Extreme-Super-Resolution](https://github.com/MayankV004/ASID-Extreme-Super-Resolution) |
+
+### 8.4 BibTeX References
+```bibtex
+@inproceedings{park2025efficient,
+  title={Efficient Attention-Sharing Information Distillation Transformer for Lightweight Single Image Super-Resolution},
+  author={Park, Karam and Soh, Jae Woong and Cho, Nam Ik},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  year={2025}
+}
+
+@inproceedings{wang2023omni,
+  title={Omni Aggregation Networks for Lightweight Image Super-Resolution},
+  author={Wang, Richard and Dong, Zheng and Gao, Chang and Zhang, Meng and Wang, Zhiyong},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages={22378--22387},
+  year={2023}
+}
+
+@inproceedings{timofte2017ntire,
+  title={NTIRE 2017 Challenge on Single Image Super-Resolution: Methods and Results},
+  author={Timofte, Radu and Agustsson, Eirikur and Van Gool, Luc and Yang, Ming-Hsuan and Zhang, Lei and others},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)},
+  pages={114--125},
+  year={2017}
+}
+```
+
+---
+
+## 9. Environment Setup & Reproducibility Guide
+
+### 9.1 Quick Start (Local Workstation)
+```bash
+# 1. Clone repository & enter workspace
+git clone https://github.com/MayankV004/ASID-Extreme-Super-Resolution.git
+cd ASID-Extreme-Super-Resolution
+
+# 2. Set up Python 3.10 virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# 3. Install PyTorch with CUDA and required libraries
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+pip install -r requirements.txt
+
+# 4. Generate x8 test benchmarks
+python data_tools/generate_x8_benchmarks.py
+
+# 5. Run evaluation on Set5, Set14, and Urban100
+python evaluate_preupsample_x8.py --datasets Set5 Set14 Urban100
+
+# 6. Run fast 2-minute local sanity training
+python data_tools/setup_mini_div2k.py
+python train.py -opt train_yamls/train_ASID_mini_test.yaml
+```
+
+### 9.2 Cloud Reproduction (Google Colab T4 GPU)
+1. Open [Google Colab](https://colab.research.google.com/) and load [`ASID_Extreme_Super_Resolution.ipynb`](file:///home/streamliner/computer-vision-project/ASID_Extreme_Super_Resolution.ipynb).
+2. Set hardware accelerator to **T4 GPU**.
+3. Run all cells: the notebook clones this repository, downloads the DIV2K dataset, performs full 51,200-patch fine-tuning, and logs PSNR/SSIM improvements.
+
