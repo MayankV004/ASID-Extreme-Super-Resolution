@@ -145,10 +145,31 @@ Open [`ASID_Extreme_Super_Resolution.ipynb`](file:///home/streamliner/computer-v
 
 ---
 
+## 📂 Repository Architecture & Directory Layout
+
+```
+├── components/          # Neural network architectures (ASID, ASID_PreUpsample, ASIDd8)
+├── ops/                 # Low-level operators, self-attention blocks, ESA, LayerNorm
+├── train_yamls/         # Experiment configuration files and training hyperparameters
+├── data_tools/          # Dataloaders (DIV2K, DF2K) and benchmark preparation scripts
+├── docs/                # Project manual, final research report, and course proposal
+├── tools/               # Visualization generators, Colab generator, MATLAB evaluators
+├── train_scripts/       # Deep learning training engine and metric logging loops
+├── test_scripts/        # Benchmark validation and inference routines
+├── utilities/           # PSNR/SSIM metrics, LR schedulers, checkpoint managers
+├── benchmark/           # Standard evaluation datasets (Set5, Set14, Urban100, B100)
+├── train.py             # Main CLI entry point for training
+├── test.py              # Main CLI entry point for testing
+├── evaluate_preupsample_x8.py # Multi-benchmark evaluation & comparative table generator
+└── ASID_Extreme_Super_Resolution.ipynb # One-click cloud training notebook for Google Colab
+```
+
+---
+
 ## 📚 Complete Project Documentation
-* 📄 **[Course Project Manual](cv-project%20docs/COURSE_PROJECT_MANUAL.md):** Architectural diagrams, hyperparameter engineering, viva presentation Q&A defense guide, and setup manual.
-* 📄 **[Final Project Report](cv-project%20docs/FINAL_PROJECT_REPORT.md):** Academic report detailing quantitative metrics, zero-shot failure mechanics, and ablation analysis.
-* 📄 **[Original Course Proposal](cv-project%20docs/CV_project.pdf):** Initial course proposal scoping extreme SISR research gaps.
+* 📄 **[Course Project Manual](docs/COURSE_PROJECT_MANUAL.md):** Architectural diagrams, hyperparameter engineering, viva presentation Q&A defense guide, and setup manual.
+* 📄 **[Final Project Report](docs/FINAL_PROJECT_REPORT.md):** Academic report detailing quantitative metrics, zero-shot failure mechanics, and ablation analysis.
+* 📄 **[Original Course Proposal](docs/CV_project.pdf):** Initial course proposal scoping extreme SISR research gaps.
 
 ---
 
