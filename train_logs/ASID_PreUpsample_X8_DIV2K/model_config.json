@@ -1,0 +1,45 @@
+{
+    "version": "ASID_PreUpsample_X8_DIV2K",
+    "phase": "test",
+    "cuda": 0,
+    "checkpoint_epoch": 1,
+    "experiment_description": "testing ASID PreUpsample x8",
+    "train_yaml": "train_ASID_PreUpsample_X8_DIV2K.yaml",
+    "logger": "tensorboard",
+    "train_script_name": "common",
+    "module_script_name": "ASID_PreUpsample",
+    "class_name": "ASID_PreUpsample",
+    "feature_num": 48,
+    "module_params": {
+        "upsampling": 8,
+        "pre_scale": 2,
+        "post_scale": 4,
+        "pre_mode": "bilinear",
+        "res_num": 3,
+        "block_num": 1,
+        "bias": true,
+        "block_script_name": "IDSA",
+        "block_class_name": "IDSA_Block2",
+        "window_size": 8,
+        "pe": true,
+        "ffn_bias": true
+    },
+    "total_epoch": 1000,
+    "batch_size": 1,
+    "dataset_params": {
+        "lr_patch_size": 48,
+        "degradation": "bicubic",
+        "image_scale": 8,
+        "subffix": "png"
+    },
+    "checkpoint_names": {
+        "generator_name": "ASID"
+    },
+    "log_root_path": "./train_logs",
+    "project_root": "./train_logs/ASID_PreUpsample_X8_DIV2K",
+    "project_summary": "./train_logs/ASID_PreUpsample_X8_DIV2K/summary",
+    "project_checkpoints": "./train_logs/ASID_PreUpsample_X8_DIV2K/checkpoints",
+    "project_samples": "./train_logs/ASID_PreUpsample_X8_DIV2K/samples",
+    "project_scripts": "./train_logs/ASID_PreUpsample_X8_DIV2K/scripts",
+    "reporter_path": "./train_logs/ASID_PreUpsample_X8_DIV2K/ASID_PreUpsample_X8_DIV2K_report"
+}

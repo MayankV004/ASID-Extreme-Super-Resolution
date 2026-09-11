@@ -61,46 +61,21 @@ class Trainer(object):
         package         = __import__("data_tools.eval_dataloader_%s"%dlModulename, fromlist=True)
         dataloaderClass = getattr(package, 'EvalDataset')
 
-        #================urban100======================#
-        self.eval_loader1      = dataloaderClass('urban100',
-                                        config["test_dataset_paths"]['urban100'],
-                                        config["eval_batch_size"],
-                                        image_scale = config["dataset_params"]["image_scale"]
-                                        )
-        self.eval_iter1  = len(self.eval_loader1)//config["eval_batch_size"]
-        if len(self.eval_loader1)%config["eval_batch_size"]>0:
-            self.eval_iter1+=1
-        
-        #================b100======================#
-        self.eval_loader2      = dataloaderClass('b100',
-                                        config["test_dataset_paths"]['b100'],
-                                        config["eval_batch_size"],
-                                        image_scale = config["dataset_params"]["image_scale"]
-                                        )
-        self.eval_iter2  = len(self.eval_loader2)//config["eval_batch_size"]
-        if len(self.eval_loader2)%config["eval_batch_size"]>0:
-            self.eval_iter2+=1
-
-        #================set14======================#
-        self.eval_loader3      = dataloaderClass('set14',
-                                        config["test_dataset_paths"]['set14'],
-                                        config["eval_batch_size"],
-                                        image_scale = config["dataset_params"]["image_scale"]
-                                        )
-        self.eval_iter3  = len(self.eval_loader3)//config["eval_batch_size"]
-        if len(self.eval_loader3)%config["eval_batch_size"]>0:
-            self.eval_iter3+=1
-
-
-        #================set5======================#
-        self.eval_loader4      = dataloaderClass('set5',
-                                        config["test_dataset_paths"]['set5'],
-                                        config["eval_batch_size"],
-                                        image_scale = config["dataset_params"]["image_scale"]
-                                        )
-        self.eval_iter4  = len(self.eval_loader4)//config["eval_batch_size"]
-        if len(self.eval_loader4)%config["eval_batch_size"]>0:
-            self.eval_iter4+=1
+        #================evaluation datasets======================#
+        self.eval_loaders = []
+        for ds_name in ['urban100', 'b100', 'set14', 'set5']:
+            try:
+                loader = dataloaderClass(ds_name,
+                                         config["test_dataset_paths"][ds_name],
+                                         config["eval_batch_size"],
+                                         image_scale = config["dataset_params"]["image_scale"]
+                                         )
+                n_iter = len(loader)//config["eval_batch_size"]
+                if len(loader)%config["eval_batch_size"]>0:
+                    n_iter += 1
+                self.eval_loaders.append((loader, n_iter))
+            except Exception as e:
+                print(f"[Warning] Evaluation dataset '{ds_name}' not available ({e}). Skipping.")
 
 
         #==============build tensorboard=================#
@@ -403,7 +378,5 @@ class Trainer(object):
                         os.path.join(ckpt_dir, 'epoch{}_{}.pth'.format(epoch + 1, 
                                     self.config["checkpoint_names"]["generator_name"])))
 
-                self.__evaluation__(self.eval_loader1, self.eval_iter1, epoch+1)
-                self.__evaluation__(self.eval_loader2, self.eval_iter2, epoch+1)
-                self.__evaluation__(self.eval_loader3, self.eval_iter3, epoch+1)
-                self.__evaluation__(self.eval_loader4, self.eval_iter4, epoch+1)
+                for loader, n_iter in self.eval_loaders:
+                    self.__evaluation__(loader, n_iter, epoch+1)

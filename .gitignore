@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Environments
+venv/
+.venv/
+
+# Large binaries and archives
+cv_project_code.zip
+*.zip
+*.tar.gz
+
+# Local datasets and scratch
+datasets/
+SR/
+SR_Results/x8_experiments/
+train_logs/ASID_mini_test/
+test_logs/
+
+# Generated benchmark x8 files (reproducible with data_tools/generate_x8_benchmarks.py)
+benchmark/HR/B100/x8/
+benchmark/HR/Urban100/x8/
+benchmark/LR/LRBI/B100/x8/
+benchmark/LR/LRBI/Urban100/x8/
