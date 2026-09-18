@@ -167,6 +167,7 @@ Open [`ASID_Extreme_Super_Resolution.ipynb`](file:///home/streamliner/computer-v
 ---
 
 ## 📚 Complete Project Documentation
+* 🚀 **[Colab Training & .pth Optimization Guide](docs/README.md):** Step-by-step cloud training instructions, checkpoint management, and inference optimization techniques.
 * 📄 **[Course Project Manual](docs/COURSE_PROJECT_MANUAL.md):** Architectural diagrams, hyperparameter engineering, viva presentation Q&A defense guide, and setup manual.
 * 📄 **[Final Project Report](docs/FINAL_PROJECT_REPORT.md):** Academic report detailing quantitative metrics, zero-shot failure mechanics, and ablation analysis.
 * 📄 **[Original Course Proposal](docs/CV_project.pdf):** Initial course proposal scoping extreme SISR research gaps.
