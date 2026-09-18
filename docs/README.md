@@ -52,28 +52,86 @@ You can train the full model on Google Colab using either the pre-packaged noteb
 
 ---
 
-### Step 2: Clone Repository or Mount Google Drive
+### Step 2: Choose Your Setup Method (Zip Upload vs Git Clone)
 
-#### Option A: Clone directly from GitHub (Recommended)
-```bash
-!git clone https://github.com/MayankV004/ASID-Extreme-Super-Resolution.git
-%cd ASID-Extreme-Super-Resolution
-```
+#### ⚡ Method A: Upload & Unzip `cv_project_code.zip` (Fastest, 2.6 MB)
+If you made local edits or prefer uploading code directly without pushing to Git:
 
-#### Option B: Mount Google Drive (if using your personal Drive storage)
+1. **(On Your Local Machine)** Generate the clean, lightweight 2.6 MB code archive:
+   ```bash
+   rm -f cv_project_code.zip
+   zip -q -r cv_project_code.zip components ops train_yamls data_tools tools train_scripts test_scripts utilities env docs train.py test.py evaluate_preupsample_x8.py generate_visual_comparisons.py make_colab_notebook.py requirements.txt train_logs/ASID_X4_DIV2K train_logs/ASID_PreUpsample_X8_DIV2K/checkpoints/epoch1_ASID.pth -x "*.pyc" "*/__pycache__/*"
+   ```
+2. **(In Google Colab)** In the left sidebar file explorer, upload `cv_project_code.zip` directly into `/content`.
+3. **Execute the End-to-End Setup & Training Pipeline:**
+
 ```python
-from google.colab import drive
-drive.mount('/content/drive')
-%cd /content/drive/MyDrive/computer-vision-project
+# 1. Unzip the project code
+!unzip -q cv_project_code.zip
+
+# 2. Install lightweight dependencies
+!pip install -q thop tensorboardX einops timm
+
+# 3. Download DIV2K training set (takes ~45 seconds on Colab)
+import os
+os.makedirs('/content/DIV2K', exist_ok=True)
+%cd /content/DIV2K
+if not os.path.exists('DIV2K_train_HR.zip'):
+    print("Downloading DIV2K...")
+    !wget -q http://data.vision.ee.ethz.ch/cvl/DIV2K/DIV2K_train_HR.zip
+    !unzip -q DIV2K_train_HR.zip
+    print("DIV2K ready!")
+
+# 4. Generate x8 LR training images
+import glob
+from PIL import Image
+from tqdm import tqdm
+
+lr_out = '/content/DIV2K/DIV2K_train_LR_bicubic/X8'
+os.makedirs(lr_out, exist_ok=True)
+hr_imgs = sorted(glob.glob('/content/DIV2K/DIV2K_train_HR/*.png'))
+
+print(f"Preparing x8 training images from {len(hr_imgs)} HR images...")
+for p in tqdm(hr_imgs):
+    b = os.path.basename(p).replace('.png', '')
+    lr_file = os.path.join(lr_out, f"{b}x8.png")
+    if not os.path.exists(lr_file):
+        with Image.open(p) as img:
+            img = img.convert('RGB')
+            w, h = img.size
+            cw, ch = (w // 8) * 8, (h // 8) * 8
+            lr_img = img.crop((0, 0, cw, ch)).resize((cw // 8, ch // 8), Image.Resampling.BICUBIC)
+            lr_img.save(lr_file, 'PNG')
+
+# 5. Return to project directory and update path in env.json
+%cd /content
+import json
+with open('env/env.json', 'r') as f:
+    cfg = json.load(f)
+cfg['path']['dataset_paths']['DIV2K'] = '/content/DIV2K'
+with open('env/env.json', 'w') as f:
+    json.dump(cfg, f, indent=4)
+
+print("Environment setup complete! Ready to train.")
+
+# 6. Run Training
+!python train.py -v "ASID_PreUpsample_X8_DIV2K" -p train --train_yaml "train_ASID_PreUpsample_X8_DIV2K.yaml"
 ```
 
 ---
 
-### Step 3: Install Required Dependencies
-Install the lightweight deep learning and vision dependencies:
+#### 🌐 Method B: Clone from GitHub
 ```bash
+# 1. Clone repository
+!git clone https://github.com/MayankV004/ASID-Extreme-Super-Resolution.git
+%cd ASID-Extreme-Super-Resolution
+
+# 2. Install dependencies
 !pip install -q thop tensorboardX einops timm opencv-python pyyaml tqdm matplotlib
 ```
+
+*(Then continue with Step 4 & 5 below to download DIV2K and downscale).*
+
 
 ---
 
