@@ -418,4 +418,4 @@ It should output `/content/DIV2K`.
 ## 📚 Related Documentation
 * 📄 **[Course Project Manual](COURSE_PROJECT_MANUAL.md):** Complete theoretical derivation, hyperparameter engineering, and viva presentation Q&A defense.
 * 📄 **[Final Project Report](FINAL_PROJECT_REPORT.md):** Academic report detailing quantitative metrics, zero-shot failure mechanics, and ablation analysis.
-* 🚀 **[Colab One-Click Notebook](../ASID_Extreme_Super_Resolution.ipynb):** Ready-to-run training notebook.
+* 🚀 **[Colab One-Click Notebook](https://colab.research.google.com/drive/1f9dEHFpCiuei5UZdbdWxa7GyFYSodoqr?usp=sharing):** Ready-to-run training notebook.

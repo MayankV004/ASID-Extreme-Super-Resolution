@@ -5,7 +5,7 @@
 [![CUDA Accelerated](https://img.shields.io/badge/CUDA-Enabled-76B900.svg)](https://developer.nvidia.com/cuda-zone)
 [![Parameters 313K](https://img.shields.io/badge/Parameters-313K-success.svg)](#architecture--complexity)
 [![Scale x8](https://img.shields.io/badge/Scale-x8_Extreme-brightgreen.svg)](#benchmark-results)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1f9dEHFpCiuei5UZdbdWxa7GyFYSodoqr?usp=sharing)
 
 > **Computer Vision and Deep Learning Course Research Project**  
 > Built upon **ASID (AAAI 2025)**: *Efficient Attention-Sharing Information Distillation Transformer for Lightweight Single Image Super-Resolution*.
@@ -141,7 +141,7 @@ python train.py -opt train_yamls/train_ASID_mini_test.yaml
 ```
 
 ### 6. Cloud Training via Google Colab (Tesla T4 GPU)
-Open [`ASID_Extreme_Super_Resolution.ipynb`](file:///home/streamliner/computer-vision-project/ASID_Extreme_Super_Resolution.ipynb) in Google Colab, set runtime to **T4 GPU**, and execute all cells to train on the complete 800-image DIV2K dataset ($51,200$ patches per epoch).
+Open the [Live Google Colab Notebook](https://colab.research.google.com/drive/1f9dEHFpCiuei5UZdbdWxa7GyFYSodoqr?usp=sharing) or [`ASID_Extreme_Super_Resolution.ipynb`](ASID_Extreme_Super_Resolution.ipynb) in Google Colab, set runtime to **T4 GPU**, and execute all cells to train on the complete 800-image DIV2K dataset ($51,200$ patches per epoch).
 
 ---
 
